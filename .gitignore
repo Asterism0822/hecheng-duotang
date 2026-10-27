@@ -1,0 +1,5 @@
+node_modules/
+tools/edge-profile*/
+tools/shot-profile*/
+*.log
+.DS_Store

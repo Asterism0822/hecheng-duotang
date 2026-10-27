@@ -1,0 +1,16 @@
+{
+  "name": "hecheng-duotang",
+  "version": "1.0.0",
+  "private": true,
+  "description": "合成多糖 —— 一个零依赖的网页合成小游戏，带本机游戏记录与自定义贴图",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node test/physics.test.mjs && node test/server.test.mjs && node tools/check-dom.mjs",
+    "check": "node tools/check-dom.mjs",
+    "balance": "node tools/balance.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
