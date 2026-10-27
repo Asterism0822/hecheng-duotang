@@ -3,6 +3,8 @@
 一个照着《合成大西瓜》做的网页版合成小游戏。零依赖，`node server.mjs` 就能跑，
 也可以直接丢进任意静态托管。
 
+**线上地址：<https://asterism0822.github.io/hecheng-duotang/>**（GitHub Pages，手机流量直接可玩）
+
 水果用文字代替，从小到大 9 级：
 
 ```
@@ -65,23 +67,30 @@ node server.mjs
 
 改端口：`PORT=8080 node server.mjs`（Windows PowerShell 用 `$env:PORT=8080; node server.mjs`）。
 
-## 让所有人都能访问
+## 线上部署（GitHub Pages）
 
-现在整个游戏是纯前端：没有接口、没有数据库，服务器只负责把 `public/` 发出去。
-所以放哪儿都行：
+当前就是这套：仓库 <https://github.com/Asterism0822/hecheng-duotang>，
+Pages 用「分支 + `/docs`」发布，地址 <https://asterism0822.github.io/hecheng-duotang/>。
 
-1. **纯静态托管（最省事）**：GitHub Pages、Netlify、Vercel、对象存储都行，
-   把 `public/` 目录整个传上去就是完整游戏。不需要 Node。
-2. **自己的服务器 / VPS**：传上去 `node server.mjs` 常驻（`pm2 start server.mjs` 或 systemd），
+改完页面后发布一次：
+
+```bash
+node tools/build-docs.mjs        # 把 public/ 同步到 docs/
+git add -A
+git commit -m "更新一下"
+git push
+```
+
+推送后 GitHub 会自动重新构建，大约半分钟后生效。`docs/` 是构建产物，别手改。
+
+## 其他部署方式
+
+整个游戏是纯前端：没有接口、没有数据库，服务器只负责把 `public/` 发出去。所以放哪儿都行：
+
+1. **Netlify / Vercel / 对象存储**：把 `docs/`（或 `public/`）目录整个传上去即可。
+2. **自己的服务器 / VPS**：`node server.mjs` 常驻（`pm2 start server.mjs` 或 systemd），
    前面挂个 Nginx 反代到 3000；也可以 `docker build -t duotang . && docker run -p 3000:3000 duotang`。
-3. **本机 + 内网穿透**（最快，几分钟）：
-
-   ```bash
-   cloudflared tunnel --url http://localhost:3000
-   # 或 ngrok http 3000
-   ```
-
-   会给你一个临时公网域名，关掉进程就失效。
+3. **本机 + 内网穿透**（临时）：`cloudflared tunnel --url http://localhost:3000`，关掉就失效。
 
 ## 数据与隐私
 
