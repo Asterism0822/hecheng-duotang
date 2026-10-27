@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f7ff">
+<meta name="description" content="合成多糖 —— 一个把贴图换成文字的合成小游戏，支持自定义贴图与本地游戏记录。">
+<title>合成多糖</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%23FFB648'/%3E%3Ccircle cx='24' cy='24' r='7' fill='%23fff' opacity='.6'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-dot" aria-hidden="true"></span>
+      <h1>合成多糖</h1>
+    </div>
+    <div class="hud-right">
+      <div class="next-chip" id="next-chip">
+        <span class="next-label">下一个</span>
+        <i id="next-swatch"></i>
+        <b id="next-name">可鸭</b>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-label">分数</span>
+          <strong id="hud-score">0</strong>
+        </div>
+        <div class="stat">
+          <span class="stat-label">最高</span>
+          <strong id="hud-best">0</strong>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="stage" id="stage">
+    <div class="board-frame">
+      <canvas id="board" width="360" height="560" aria-label="游戏区域：左右移动，松手落下水果"></canvas>
+    </div>
+
+    <div class="overlay" id="overlay-start">
+      <div class="overlay-card">
+        <p class="kicker">MERGE · 9 LEVELS</p>
+        <h2>合成多糖</h2>
+        <p class="overlay-sub">相同的词撞在一起，就合成更大的一级。</p>
+        <div class="chain" id="chain-preview" aria-label="合成链"></div>
+        <button class="btn primary block" id="btn-start">开始游戏</button>
+        <div class="overlay-links">
+          <button class="btn ghost" id="btn-records-start">游戏记录</button>
+          <button class="btn ghost" id="btn-settings-start">设置</button>
+        </div>
+        <p class="hint">按住左右移动，松手落下 · 也可用 ← → 和空格</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="toolbar">
+    <button class="btn" id="btn-end">结束游戏</button>
+    <button class="btn" id="btn-records">游戏记录</button>
+    <button class="btn" id="btn-settings">设置</button>
+  </footer>
+
+  <p class="footnote">贴图与记录都只存在这台设备上，别人看不到</p>
+</div>
+
+<!-- 结算 -->
+<div class="modal" id="modal-end" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="end-title">
+    <button class="icon-btn modal-x" data-close="modal-end" aria-label="关闭">✕</button>
+    <h2 id="end-title">本局结束</h2>
+    <p class="end-score"><span id="end-score">0</span><small>分</small></p>
+    <p class="end-best" id="end-best"></p>
+    <p class="end-meta" id="end-meta"></p>
+    <p class="note ok" id="end-note"></p>
+
+    <div class="row">
+      <button class="btn primary" id="btn-again">再来一局</button>
+      <button class="btn" id="btn-resume">继续游戏</button>
+    </div>
+    <button class="link" id="btn-records-end">查看游戏记录</button>
+  </div>
+</div>
+
+<!-- 游戏记录 -->
+<div class="modal" id="modal-records" hidden>
+  <div class="modal-card wide" role="dialog" aria-modal="true" aria-labelledby="records-title">
+    <div class="modal-head">
+      <h2 id="records-title">游戏记录</h2>
+      <button class="icon-btn" data-close="modal-records" aria-label="关闭">✕</button>
+    </div>
+    <p class="note">只记在这台设备的浏览器里，只有你能看到。</p>
+    <div class="rec-stats" id="records-stats"></div>
+    <ol class="rec-list" id="records-list"></ol>
+    <button class="btn block" id="btn-records-clear">清空记录</button>
+  </div>
+</div>
+
+<!-- 设置 -->
+<div class="modal" id="modal-settings" hidden>
+  <div class="modal-card wide" role="dialog" aria-modal="true" aria-labelledby="set-title">
+    <div class="modal-head">
+      <h2 id="set-title">设置</h2>
+      <button class="icon-btn" data-close="modal-settings" aria-label="关闭">✕</button>
+    </div>
+
+    <section class="settings-block">
+      <h3>自定义贴图</h3>
+      <p class="note">图片只保存在这台设备的浏览器里，不会上传，别的玩家看不到。上传后圆球就换成你的图，文字会被替换掉。</p>
+      <ul class="skin-list" id="skin-list"></ul>
+      <button class="btn block" id="btn-clear-skins">清空全部贴图</button>
+      <input type="file" id="skin-file" accept="image/*" hidden>
+    </section>
+
+    <section class="settings-block">
+      <h3>其他</h3>
+      <label class="switch">
+        <input type="checkbox" id="mute-toggle">
+        <span>合成音效</span>
+      </label>
+    </section>
+
+    <button class="btn primary block" data-close="modal-settings">完成</button>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script type="module" src="./game.js"></script>
+</body>
+</html>
